@@ -19,7 +19,8 @@ const userSignup = async (req, res)=>{
             last_name: last_name,
             email: email,
             password: hashedPassword,
-            userType: userType
+            userType: userType,
+            book: []
         })
 
         const existingUser = await userModel.findOne({email})
@@ -28,7 +29,7 @@ const userSignup = async (req, res)=>{
             return res.status(500).send("User already exists, please login!")
         }
         await user.save()
-        res.status(200).send({message:"Signup successful!"})
+        res.status(200).send({message:"Signup successful!", user})
     } catch (error) {
         res.status(400).send(error.message)
     }

@@ -26,7 +26,13 @@ const mongoose = require("mongoose");
     userType:{
         type: String,
         enum:["admin", "user"]
-    }
+    },
+
+    book:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Book",
+        required: true
+    }]
  })
 
 
