@@ -35,4 +35,25 @@ const userSignup = async (req, res)=>{
     }
 }
 
-module.exports = {userSignup}
+const userLogin = async (req, res)=>{
+    try {
+        const {email, password} = req.body;
+
+        const user = await userModel.findOne({email})
+        if(!user){
+            return res.status(500).send("user not found, please signup!")
+        }
+
+        const comparePassword = await bcrypt.compare(password, user.password);
+
+        if(!comparePassword){
+            return res.status(500).send("Incorrect password!")
+        }
+
+        res.status(200).send({message: "Login sucessfull!", user: user.first_name +" " + user.last_name})
+    } catch (error) {
+        res.status(400).send(error.message)
+    }
+}
+
+module.exports = {userSignup, userLogin}

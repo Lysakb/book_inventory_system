@@ -12,6 +12,7 @@ app.use(express.json());
 
 app.use("/user", userRoute);
 
+
 app.get("/", (req, res)=>{
     res.status(200).send("Home page!")
 })
