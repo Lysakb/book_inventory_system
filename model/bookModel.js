@@ -18,6 +18,11 @@ const bookSchema = new Schema({
         unique: true
     },
 
+    body: {
+        type: String,
+        required: true
+    },
+
     readingTime:{
         type: String,
         required: true
