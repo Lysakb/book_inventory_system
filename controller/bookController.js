@@ -65,4 +65,28 @@ const updateBook = async(req, res)=>{
     }
 }
 
-module.exports = {getAllBook, createBook, updateBook}
+const deleteBook = async(req, res)=>{
+    const id = req.params.id;
+    const user = req.user;
+
+    try{
+        const Book = await bookModel.findById(id);
+        if(user._id.toString() === Book.user.toString()){
+       
+            const deleteBook =  await bookModel.findByIdAndDelete(id);
+           
+               const index = user.book.indexOf(id);
+    
+               if(index !== -1){
+                   user.book.splice(index, 1)
+               
+               await user.save()
+               }
+            res.status(200).send("Deleted successfully!")
+            }
+    }catch(error){
+        res.status(400).send(error.message)
+    }
+}
+
+module.exports = {getAllBook, createBook, updateBook, deleteBook}
