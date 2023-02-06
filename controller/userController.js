@@ -4,6 +4,21 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
+
+const getUsers = async(req, res)=>{
+    let user = {}
+    try{
+        let user = await userModel.find()
+        res.status(200).send(user)
+    }catch(error){
+        res.status(400).send(error.message)
+    }
+
+    if(!user){
+        return res.status(500).send("User not found!")
+    }
+}
+
 const userSignup = async (req, res)=>{
     
     try {
@@ -69,4 +84,6 @@ const userLogin = async (req, res)=>{
     }
 }
 
-module.exports = {userSignup, userLogin}
+
+
+module.exports = {userSignup, userLogin, getUsers}

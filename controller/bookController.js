@@ -22,7 +22,7 @@ const createBook = async (req, res) => {
 
 
     try{
-        const book = new bookModel({
+        const Book = new bookModel({
             title: title,
             description: description,
             isbn: isbn,
@@ -30,9 +30,9 @@ const createBook = async (req, res) => {
             user: user._id,
             readingTime: readingTime(body)
         })
-        
-        await book.save()
-        res.status(200).send({message:"book created successfully", book})
+        user.book = user.book.concat(Book._id)
+        await user.save()
+        res.status(200).send({message:"book created successfully", Book})
     }catch(error){
         res.status(400).send(error.message)
     }
