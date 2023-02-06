@@ -3,11 +3,13 @@ const userModel = require("./model/userModel");
 require("dotenv").config();
 
 const authenticate = async (req, res, next)=>{
+    let token
     if(req.headers.authorization && req.headers.authorization.startsWith("Bearer")){
         try{
-            const token = req.headers.authorization.split("")[1];
+            token = req.headers.authorization.split(" ")[1];
 
             const verifiedToken = jwt.verify(token, process.env.SECRET_KEY);
+        
 
             req.user = await userModel.findById(verifiedToken.id);
 
@@ -22,3 +24,5 @@ const authenticate = async (req, res, next)=>{
     }
 
 }
+
+module.exports = authenticate;

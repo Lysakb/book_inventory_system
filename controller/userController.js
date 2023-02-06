@@ -1,6 +1,8 @@
 const express = require("express");
 const userModel = require("../model/userModel");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const userSignup = async (req, res)=>{
     
@@ -50,7 +52,18 @@ const userLogin = async (req, res)=>{
             return res.status(500).send("Incorrect password!")
         }
 
-        res.status(200).send({message: "Login sucessfull!", user: user.first_name +" " + user.last_name})
+        const userId = {
+            id: user._id,
+            email: user.email
+        }
+        const token = jwt.sign(userId, process.env.SECRET_KEY, {expiresIn: '1h'} )
+
+        res.status(200).send({
+            message:"Login successful!",
+            user: user.first_name +" " + user.last_name,
+            token
+        })
+        
     } catch (error) {
         res.status(400).send(error.message)
     }
