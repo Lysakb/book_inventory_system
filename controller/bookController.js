@@ -3,15 +3,6 @@ const {readingTime} = require("../readingTime");
 const userModel = require("../model/userModel");
 
 
-const getAllBook = async (req, res)=>{
-    try {
-        const book = await bookModel.find()
-        res.status(200).send(book)
-    } catch (error) {
-        res.status(400).send(error.message)
-    }
-}
-
 const createBook = async (req, res) => {
     const {title, description, isbn, body} = req.body;
     const user = req.user;
@@ -32,12 +23,46 @@ const createBook = async (req, res) => {
         })
         user.book = user.book.concat(Book._id)
         await user.save()
+
+        await Book.save()
         res.status(200).send({message:"book created successfully", Book})
     }catch(error){
         res.status(400).send(error.message)
     }
 }
 
+const getAllBook = async (req, res)=>{
+    try {
+        const book = await bookModel.find()
+        res.status(200).send(book)
+    } catch (error) {
+        res.status(400).send(error.message)
+    }
+}
 
+const updateBook = async(req, res)=>{
+    const {title, description, isbn, body} = req.body;
+    const id = req.params.id;
 
-module.exports = {getAllBook, createBook}
+    try{
+        const book = await bookModel.findByIdAndUpdate(id, {
+            $set:{
+                title: title,
+                description: description,
+                isbn: isbn,
+                body: body
+            },
+        },
+        {new: true}
+        );
+
+        if(!book){
+            return res.status(500).send("Book not found!")
+        }
+        res.status(200).send({message: "book updated successsfully!", book})
+    }catch(error){
+        res.status(400).send(error.message)
+    }
+}
+
+module.exports = {getAllBook, createBook, updateBook}
