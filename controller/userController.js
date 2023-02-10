@@ -22,9 +22,9 @@ const getUsers = async(req, res)=>{
 const userSignup = async (req, res)=>{
     
     try {
-        const {first_name, last_name, email, password, userType} = req.body;
+        const {first_name, last_name, email, password, role} = req.body;
 
-        if(!first_name || !last_name || !email || !password || !userType){
+        if(!first_name || !last_name || !email || !password || !role){
         return res.status(500).send("Please input all fields!")
         }
 
@@ -36,7 +36,7 @@ const userSignup = async (req, res)=>{
             last_name: last_name,
             email: email,
             password: hashedPassword,
-            userType: userType,
+            role: role,
             book: []
         })
 

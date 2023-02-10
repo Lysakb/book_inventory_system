@@ -1,16 +1,15 @@
 const bookModel = require("../model/bookModel");
-const {readingTime} = require("../readingTime");
+const {readingTime} = require("../middleware/readingTime");
 const userModel = require("../model/userModel");
 
 
-const createBook = async (req, res) => {
+const createBook = async (req, res, next) => {
     const {title, description, isbn, body} = req.body;
     const user = req.user;
 
     if(!title || !description || !isbn || !body){
         return res.status(500).send("Please input all fields!")
     }
-
 
     try{
         const Book = new bookModel({
@@ -21,6 +20,7 @@ const createBook = async (req, res) => {
             user: user._id,
             readingTime: readingTime(body)
         })
+    
         user.book = user.book.concat(Book._id)
         await user.save()
 

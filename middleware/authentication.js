@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const userModel = require("./model/userModel");
+const userModel = require("../model/userModel");
 require("dotenv").config();
 
 const authenticate = async (req, res, next)=>{
@@ -12,8 +12,9 @@ const authenticate = async (req, res, next)=>{
         
 
             req.user = await userModel.findById(verifiedToken.id);
-
             next()
+
+            
         }catch(error){
             res.status(400).send("Not authorized!")
         }

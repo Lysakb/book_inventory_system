@@ -23,8 +23,9 @@ const mongoose = require("mongoose");
         required: true
     },
 
-    userType:{
+    role:{
         type: String,
+        default: "user",
         enum:["admin", "user"]
     },
 
