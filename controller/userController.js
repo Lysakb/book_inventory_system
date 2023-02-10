@@ -87,21 +87,28 @@ const userLogin = async (req, res)=>{
 const updateProfile = async(req, res)=>{
     const {first_name, last_name, email} = req.body;
     const id = req.params.id;
-    try{
-        const user = await userModel.findByIdAndUpdate(id,{ 
-        $set: {
-            first_name: first_name,
-            last_name: last_name,
-            email: email
-        },
-        },
-        {new: true});
+    const user = req.user;
+        try{
+            const update = await userModel.findById(id);
+            if(user._id.toString() === update.id.toString()){
+            const UpdateUser = await userModel.findByIdAndUpdate(id,{ 
+            $set: {
+                first_name: first_name,
+                last_name: last_name,
+                email: email
+            },
+            },
+            {new: true});
+        
+        await user.save();
+            res.status(200).send({message: "profile is updated", UpdateUser})
+            }
+            return res.status(400).send({message: "You are not authorized!"})
+        }catch(error){
+            res.status(400).send(error.message)
+        }
     
-    await user.save();
-        res.status(200).send({message: "profile is updated", user})
-    }catch(error){
-        res.status(400).send(error.message)
-    }
+   
 }
 
 module.exports = {userSignup, userLogin, getUsers, updateProfile}
